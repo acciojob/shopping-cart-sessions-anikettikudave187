@@ -14,6 +14,17 @@ const clearBtn = document.getElementById("clear-cart-btn");
 
 let addedCartList = [];
 
+function loadCartFromSession(){
+	const cartData=sessionStorage.getItem("cart");
+	if(cartData){
+		addedCartList=JSON.parse(cartData);
+	}
+}
+
+function setToSession(){
+	sessionStorage.setItem("cart", JSON.stringify(addedCartList));
+}
+
 // Render product list
 function renderProducts() {
   productList.innerHTML = ""; // Clear existing list
@@ -51,6 +62,7 @@ function addToCart(productId) {
   const product = products.find((p) => p.id === productId);
   if (product) {
     addedCartList.push(product);
+	  setToSession();
     renderCart();
   }
 }
@@ -61,6 +73,7 @@ function removeFromCart(productId) {}
 // Clear cart
 function clearCart() {
   addedCartList = [];
+	sessionStorage.removeItem("cart");
   renderCart();
 }
 
@@ -70,4 +83,3 @@ clearBtn.addEventListener("click", clearCart);
 // Initial render
 renderProducts();
 renderCart(); // Optional: shows empty cart on load
-
