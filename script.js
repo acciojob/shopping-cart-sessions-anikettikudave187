@@ -18,6 +18,8 @@ function loadCartFromSession(){
 	const cartData=sessionStorage.getItem("cart");
 	if(cartData){
 		addedCartList=JSON.parse(cartData);
+	}else{
+		addedCartList=[];
 	}
 }
 
@@ -61,8 +63,11 @@ function renderCart() {
 function addToCart(productId) {
   const product = products.find((p) => p.id === productId);
   if (product) {
-    addedCartList.push(product);
-	  setToSession();
+	let currCart=JSON.parse(sessionStorage.getItem("cart"))|| [];
+	currCart.push(product);
+	  
+    sessionStorage.setItem("cart",JSON.stringify(currCart));
+	addedCartList = currCart;
     renderCart();
   }
 }
@@ -81,5 +86,6 @@ function clearCart() {
 clearBtn.addEventListener("click", clearCart);
 
 // Initial render
+loadCartFromSession();
 renderProducts();
 renderCart(); // Optional: shows empty cart on load
