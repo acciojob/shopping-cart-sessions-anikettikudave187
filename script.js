@@ -62,15 +62,29 @@ function renderCart() {
 // Add item to cart
 function addToCart(productId) {
   const product = products.find((p) => p.id === productId);
-  if (product) {
-	let currCart=JSON.parse(sessionStorage.getItem("cart"))|| [];
-	currCart.push(product);
-	  
-    sessionStorage.setItem("cart",JSON.stringify(currCart));
-	addedCartList = currCart;
-    renderCart();
+  if (!product) return;
+
+  // ✅ ALWAYS load current cart state from sessionStorage
+  let currCart = [];
+  const cartData = sessionStorage.getItem("cart");
+  if (cartData) {
+    try {
+      currCart = JSON.parse(cartData);
+    } catch (e) {
+      currCart = [];
+    }
   }
+
+  // ✅ Add new product
+  currCart.push(product);
+
+  // ✅ Save back
+  sessionStorage.setItem("cart", JSON.stringify(currCart));
+  addedCartList = currCart;
+
+  renderCart();
 }
+
 
 // Remove item from cart (not implemented yet)
 function removeFromCart(productId) {}
